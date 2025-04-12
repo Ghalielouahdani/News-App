@@ -1,73 +1,143 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TextInput } from 'react-native';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-const newsData = [
-    { title: "L’intelligence artificielle bouleverse le monde du travail", date: "2025-04-10T08:30:00Z" },
-    { title: "Les voitures électriques dominent le marché européen", date: "2025-04-09T14:15:00Z" },
-    { title: "OpenAI dévoile un nouveau modèle encore plus puissant", date: "2025-04-08T11:45:00Z" },
-    { title: "Le marché des crypto-monnaies repart à la hausse", date: "2025-04-07T16:20:00Z" },
-    { title: "Une percée scientifique majeure dans la lutte contre le cancer", date: "2025-04-06T10:05:00Z" },
-    { title: "Tesla annonce une Gigafactory en Afrique du Nord", date: "2025-04-05T09:00:00Z" },
-    { title: "Des chercheurs créent une batterie 10 fois plus efficace", date: "2025-04-04T12:00:00Z" },
-    { title: "Le streaming dépasse définitivement la télévision classique", date: "2025-04-03T18:30:00Z" },
-    { title: "Une intelligence artificielle compose une symphonie primée", date: "2025-04-02T13:15:00Z" },
-    { title: "La mission spatiale vers Mars entre dans sa phase finale", date: "2025-04-01T07:45:00Z" },
-    { title: "Une start-up française révolutionne le stockage d'énergie", date: "2025-03-31T10:00:00Z" },
-    { title: "Apple lance un iPhone entièrement recyclable", date: "2025-03-30T15:20:00Z" },
-    { title: "Le réchauffement climatique atteint un nouveau record", date: "2025-03-29T09:45:00Z" },
-    { title: "Une IA diagnostique plus vite que les médecins", date: "2025-03-28T11:10:00Z" },
-    { title: "SpaceX prépare une nouvelle station orbitale", date: "2025-03-27T13:00:00Z" },
-    { title: "Le télétravail devient la norme dans la Silicon Valley", date: "2025-03-26T08:30:00Z" },
-    { title: "Un vaccin universel contre la grippe en test", date: "2025-03-25T14:55:00Z" },
-    { title: "La Chine teste un train à sustentation magnétique ultra-rapide", date: "2025-03-24T12:40:00Z" },
-    { title: "Les énergies renouvelables dépassent le charbon pour la première fois", date: "2025-03-23T10:25:00Z" },
-    { title: "Une découverte archéologique majeure en Égypte", date: "2025-03-22T17:15:00Z" }
-  ];
 
-  
+const Header = ({ searchQuery, setSearchQuery }) => {
+    return (
+      <View style={{ marginBottom: 20 }}>
+        <Text style={menuStyles.headerText}>News</Text>
+        <TextInput
+          style={menuStyles.searchInput}
+          placeholder="Rechercher une news..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
+    );
+  };
+
 const Item = ({ item }) => (
+  <View style={menuStyles.itemContainer}>  
   <View style={menuStyles.innerContainer}>
+    <Image source={{uri: item.image}} style= {menuStyles.itemImage}></Image>
     <Text style={menuStyles.itemText}>{item.title}</Text>
-    <Text style={menuStyles.itemText}>{item.date}</Text>
+  </View>
   </View>
 );
-
-
 
 
 const MenuItems = () => {
   const renderItem = ({ item }) => <Item item={item} />;
 
+  const [newsData, setNewsData] = useState([]);
+
+useEffect(() => {
+  const fetchNews = async () => {
+    try {
+      const response = await fetch('https://newsapi.ai/api/v1/article/getArticles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: {
+            $query: { lang: 'eng' },
+            $filter: { forceMaxDataTimeWindow: '31' },
+          },
+          resultType: 'articles',
+          articlesSortBy: 'date',
+          apiKey: 'f59e795d-f58c-4f80-94e1-bc6a856d3619',
+        }),
+      });
+
+      const data = await response.json();
+      setNewsData(data.articles.results);
+    } catch (error) {
+      console.error('Erreur lors du fetch des news :', error);
+    }
+  };
+
+  fetchNews();
+}, []);
+
+const [searchQuery, setSearchQuery] = useState('');
+const [filteredData, setFilteredData] = useState([]);
+
+useEffect(() => {
+    const filtered = newsData.filter(item =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredData(filtered);
+  }, [searchQuery, newsData]);
+
   return (
     <View style={menuStyles.container}>
-      <Text style={menuStyles.headerText}>View Menu</Text>
+        <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <FlatList
-        data={newsData}
-        keyExtractor={(item) => item.date}
+        data={filteredData && filteredData.length > 0 ? filteredData : newsData}
+        keyExtractor={(item) => item.uri}
+        decelerationRate="normal"
         renderItem={renderItem}>
         </FlatList>
     </View>
   );
 };
 
+
 const menuStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  innerContainer: {
-    paddingHorizontal: 30,
-    paddingVertical: 5,
-    backgroundColor: 'white',
-  },
-  headerText: {
-    color: 'black',
-    fontSize: 30,
-    flexWrap: 'wrap',
-    textAlign: 'center',
-  },
-  itemText: {
-    color: '#black',
-    fontSize: 20,
-  },
-});
+    container: {
+      flex: 1,
+    },
+    itemContainer: {
+      marginVertical: 10, 
+      marginHorizontal: 15, 
+      borderRadius: 10,
+      backgroundColor: '#f9f9f9', 
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3, 
+    },
+    innerContainer: {
+      padding: 10,
+      backgroundColor: 'white',
+      borderRadius: 10,
+    },
+    headerText: {
+      color: 'purple',
+      fontSize: 30,
+      flexWrap: 'wrap',
+      textAlign: 'justify',
+      marginTop: 10,
+      marginLeft : 10,
+      marginBottom: 30,
+      fontWeight: 'bold',
+    },
+    itemText: {
+      color: 'black',
+      fontSize: 15,
+      fontFamily: 'arial',
+      marginTop: 5,
+      fontWeight: 'bold',
+    },
+    itemImage: {
+      width: '100%',
+      height: 180,
+      borderRadius: 10,
+    },
+    searchInput: {
+      height: 40,
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 5,
+      paddingHorizontal: 10,
+      backgroundColor: '#fff',
+      opacity: 0.8,
+      marginLeft: 10,
+      marginRight : 10
+    },
+  });
 
 export default MenuItems;
