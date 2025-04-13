@@ -8,6 +8,7 @@ export default function App() {
                 screenOptions={{ contentStyle: { backgroundColor: '#fff' } }} // This is the screen options of the app
             >
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="details" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" options={{ headerShown: false }} />
             </Stack >
         </SafeAreaView>
