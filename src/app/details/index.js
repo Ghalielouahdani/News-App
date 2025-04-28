@@ -18,7 +18,7 @@ export default function DetailsPage() {
   };
 
   return (
-    <ScrollView style={newsStyles.container}>
+    <View style={newsStyles.container}>
       <View style={newsStyles.detailsContainer}>
         <Text style={newsStyles.detailsTitle}>{articleData.title}</Text>
         <Image
@@ -35,8 +35,10 @@ export default function DetailsPage() {
             {formatDate(articleData.dateTimePub)}
           </Text>
         </View>
-        <Text style={newsStyles.detailsDescription}>{articleData.body}</Text>
       </View>
-    </ScrollView>
+      <ScrollView style={newsStyles.scrollContent}>
+        <Text style={newsStyles.detailsDescription}>{articleData.body}</Text>
+      </ScrollView>
+    </View>
   );
 }

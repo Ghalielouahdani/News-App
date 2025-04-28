@@ -5,6 +5,12 @@ const newsStyles = StyleSheet.create({
     backgroundColor: "#D2D9DC",
     flex: 1,
   },
+  scrollContent: {
+    flex: 1,
+    padding: 16,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
   header: {
     backgroundColor: "black",
     borderBottomLeftRadius: 20,
@@ -71,19 +77,19 @@ const newsStyles = StyleSheet.create({
     marginLeft: 10,
     color: "black",
   },
-  detailsContainer: {
-    padding: 16,
-  },
   detailsImage: {
     width: "100%",
     height: 200,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   detailsTitle: {
-    fontSize: 24,
+    marginTop: 10,
+    marginLeft: 10,
+    fontSize: 22,
     fontWeight: "bold",
     marginBottom: 16,
+    color: "#C7CBCC",
   },
   detailsDescription: {
     fontSize: 16,
@@ -92,18 +98,18 @@ const newsStyles = StyleSheet.create({
   metadataContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 16,
-    paddingHorizontal: 8,
+    paddingHorizontal: 2,
   },
   authorText: {
     fontSize: 14,
-    color: "#666",
+    color: "#C7CBCC",
     fontStyle: "italic",
     fontWeight: "bold",
+    marginLeft: 10,
   },
   dateText: {
     fontSize: 14,
-    color: "#666",
+    color: "#C7CBCC",
     fontWeight: "bold",
   },
   searchIconRefresh: {
@@ -127,7 +133,13 @@ const newsStyles = StyleSheet.create({
     position: "absolute",
     left: 20,
     top: 30,
-  }
+  },
+  detailsContainer: {
+    backgroundColor: "black",
+    flex: 0.8,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
 });
 
 export default newsStyles;

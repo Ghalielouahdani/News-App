@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ghalied.myawesomejeproject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -30,6 +31,14 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "my-awesome-je-project"
+    "scheme": "my-awesome-je-project",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "766c0e6a-986c-4bda-b3ef-275b8f1a238d"
+      }
+    }
   }
 }

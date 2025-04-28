@@ -40,16 +40,17 @@ const Item = ({ item }) => {
   return (
     <View style={newsStyles.itemContainer}>
       <View style={newsStyles.innerContainer}>
-        <Image source={{ uri: item.image }} style={newsStyles.itemImage} />
         <Pressable
           onPress={() =>
             router.push({
               pathname: "/details",
               params: { article: JSON.stringify(item) },
+              
             })
           }
         >
-          <Text style={newsStyles.itemText}>{item.title}</Text>
+        <Image source={{ uri: item.image }} style={newsStyles.itemImage} />
+        <Text style={newsStyles.itemText}>{item.title}</Text>
         </Pressable>
       </View>
     </View>
